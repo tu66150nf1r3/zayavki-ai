@@ -1,0 +1,18 @@
+fastapi==0.136.3
+uvicorn==0.49.0
+python-multipart==0.0.32
+jinja2==3.1.6
+pydantic==2.11.9
+python-dotenv==1.2.2
+
+# Клиент к DeepSeek (OpenAI-совместимый API)
+openai==1.109.0
+
+# Разбор входящих форматов
+python-docx==1.2.0
+pypdf==6.14.2
+openpyxl==3.1.5
+
+# Тесты и генерация демо-заявок
+pytest==9.1.1
+reportlab==5.0.1

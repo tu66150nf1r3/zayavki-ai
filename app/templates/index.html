@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Разбор входящих заявок на перевозку</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="topbar">
+  <div>
+    <h1>Разбор входящей заявки на перевозку</h1>
+    <p class="subtitle">Прототип: извлечение полей сделки и вопросы там, где данных не хватает</p>
+  </div>
+  <div class="engine">
+    {% if llm_enabled %}
+      <span class="badge badge-llm">модель: {{ model }}</span>
+    {% else %}
+      <span class="badge badge-rules">ключ не задан — работают правила</span>
+    {% endif %}
+  </div>
+</header>
+
+<main class="layout">
+  <section class="panel">
+    <h2>Входящая заявка</h2>
+
+    <div class="samples">
+      <span class="samples-label">Демо-заявки:</span>
+      {% for sample in samples %}
+        <button class="chip" data-sample="{{ sample.name }}" title="{{ sample.hint }}">{{ sample.title }}</button>
+      {% endfor %}
+    </div>
+
+    <div id="dropzone" class="dropzone">
+      <input type="file" id="file" accept=".txt,.md,.eml,.docx,.pdf,.xlsx,.xlsm,.csv" hidden>
+      <p>Перетащите файл сюда или <button type="button" class="linklike" id="browse">выберите на диске</button></p>
+      <p class="hint">txt, eml, docx, pdf, xlsx — до 10 МБ</p>
+    </div>
+
+    <textarea id="text" rows="14" placeholder="…или вставьте текст письма / сообщения сюда"></textarea>
+
+    <div class="controls">
+      <button id="parse" class="primary">Разобрать заявку</button>
+      <label class="toggle">
+        <input type="checkbox" id="useLlm" {% if llm_enabled %}checked{% endif %} {% if not llm_enabled %}disabled{% endif %}>
+        использовать модель
+      </label>
+    </div>
+    <p class="hint">Снимите галочку, чтобы посмотреть работу детерминированного экстрактора без обращения к API.</p>
+  </section>
+
+  <section class="panel">
+    <div id="status" class="status">Выберите демо-заявку, загрузите файл или вставьте текст.</div>
+
+    <div id="result" hidden>
+      <div class="verdict" id="verdict"></div>
+
+      <h2>Карточка сделки</h2>
+      <div id="fields" class="fields"></div>
+
+      <h2>Вопросы клиенту <span id="qcount" class="counter"></span></h2>
+      <div id="questions" class="questions"></div>
+      <div class="controls" id="answerControls" hidden>
+        <button id="recalc" class="primary">Применить ответы и пересчитать</button>
+        <button id="copyLetter" class="secondary">Скопировать письмо с вопросами</button>
+      </div>
+
+      <div id="warnings" class="warnings" hidden></div>
+
+      <details class="raw">
+        <summary>Исходный JSON ответа API</summary>
+        <pre id="json"></pre>
+      </details>
+    </div>
+  </section>
+</main>
+
+<script>window.FIELD_LABELS = {{ labels | tojson }};</script>
+<script src="/static/app.js"></script>
+</body>
+</html>
