@@ -67,7 +67,9 @@ def build_questions(draft: OrderDraft, source: SourceInfo | None = None) -> list
     questions: list[Question] = []
 
     if source is not None and source.is_scan:
-        questions.append(
+        # Документ не прочитан целиком — спрашивать про отдельные поля бессмысленно,
+        # менеджеру нужен один осмысленный вопрос, а не список из девяти пустых.
+        return [
             Question(
                 field="__source__",
                 text=(
@@ -79,7 +81,7 @@ def build_questions(draft: OrderDraft, source: SourceInfo | None = None) -> list
                 blocking=True,
                 reason="missing",
             )
-        )
+        ]
 
     for name, field in draft.items():
         required = name in REQUIRED_FIELDS

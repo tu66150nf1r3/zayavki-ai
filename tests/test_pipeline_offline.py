@@ -97,3 +97,11 @@ def test_docx_table_fields_are_extracted():
     assert result.draft.station_from.value == "Череповец-2"
     assert result.draft.station_to.value == "Усть-Луга"
     assert result.draft.period.status == FieldStatus.ok
+
+
+def test_scan_asks_only_one_meaningful_question():
+    """Документ не прочитан — один осмысленный вопрос вместо списка пустых полей."""
+    path = _sample("07_scan.pdf")
+    result = process_upload(path.name, path.read_bytes(), today=TODAY, use_llm=False)
+    assert len(result.questions) == 1
+    assert result.questions[0].field == "__source__"
