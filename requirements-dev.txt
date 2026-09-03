@@ -1,0 +1,7 @@
+-r requirements.txt
+
+# Тесты
+pytest==9.1.1
+
+# Генерация демо-заявки «скан без текстового слоя» (samples/make_samples.py)
+reportlab==5.0.1

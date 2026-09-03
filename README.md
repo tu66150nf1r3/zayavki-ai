@@ -10,8 +10,11 @@
 ## Запуск
 
 ```bash
-pip install -r requirements.txt
+pip install -r requirements-dev.txt
 ```
+
+(`requirements.txt` — только то, что нужно приложению; `requirements-dev.txt`
+добавляет pytest и reportlab для тестов и пересборки демо-заявок.)
 
 ```bash
 copy .env.example .env
